@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: strapi
+
+resources:
+- 01_namespace.yaml
+- 02_ingress.yaml
+- postgresql
+- strapi
+
+configMapGenerator:
+- name: pgsql-config
+  behavior: create
+  envs:
+  - config/pgsql.config
+- name: strapi-config
+  behavior: create
+  envs:
+  - config/strapi.config
+
+secretGenerator:
+- name: pgsql-secret
+  behavior: create
+  envs:
+  - secret/pgsql.secret
+- name: strapi-secret
+  behavior: create
+  envs:
+  - secret/strapi.secret

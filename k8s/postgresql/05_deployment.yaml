@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql
+  namespace: strapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:14.4
+        imagePullPolicy: "IfNotPresent"
+        ports:
+          - containerPort: 5432
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: pgsqldata
+        envFrom:
+          - secretRef:
+              name: pgsql-secret
+          - configMapRef:
+              name: pgsql-config
+      volumes:
+        - name: pgsqldata
+          persistentVolumeClaim:
+            claimName: postgresql-pv-claim

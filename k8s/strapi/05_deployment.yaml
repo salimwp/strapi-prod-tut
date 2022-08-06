@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: strapi
+  namespace: strapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: strapi
+  template:
+    metadata:
+      labels:
+        app: strapi
+    spec:
+      containers:
+      - name: strapi
+        image: elysautus/strapiportal-arm64
+        imagePullPolicy: "Always"
+        ports:
+          - containerPort: 1337
+        envFrom:
+          - secretRef:
+              name: strapi-secret
+          - configMapRef:
+              name: strapi-config
